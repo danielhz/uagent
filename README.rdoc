@@ -1,0 +1,18 @@
+= uagent
+
+Helps you to develop web applications for desktop or mobile user agents.
+
+== Use
+
+== Other Stuff
+
+Author:: Daniel Hernández, daniel@degu.cl
+Version:: 0.0
+License:: GPL V3
+
+== Warranty
+
+This software is provided "as is" and without any express or implied
+warranties, including, without limitation, the implied warranties of
+merchantability and fitness for a particular purpose.
+
