@@ -4,12 +4,13 @@ module UAgent
 
   class Parser
 
-    @@keys = [['Opera Mini', :mobile],
-              ['iPhone', :mobile],
+    @@keys = [['Mobile', :mobile],
+              ['Opera Mini', :mobile],
+              ['iPhone', :iphone, :mobile],
               ['ACER', :mobile],
               ['Alcatel', :mobile],
               ['AUDIOVOX', :mobile],
-              ['BlackBerry', :mobile],
+              ['BlackBerry', :blackberry, :mobile],
               ['CDM', :mobile],
               ['Ericsson', :mobile],
               ['LG', :mobile],
@@ -31,17 +32,19 @@ module UAgent
               ['Telit_mobile_Terminals', :mobile],
               ['TSM', :mobile],
               ['Palm', :mobile]]
-    def initialize(keys = [:desktop, :mobile])
-      @keys = keys
+    @@priority = [:iphone, :blackberry, :mobile]
+
+    def initialize(*keys)
+      @keys = [:desktop, :mobile] + keys
     end
 
     def call(env)
       # Check devices in http user agent
       http_user_agent = env['HTTP_USER_AGENT']
-      @@keys.each do |key|
-        if /#{key[0]}/ === http_user_agent
-          key[(1...key.size)].each do |user_agent|
-            return user_agent if @keys.include? user_agent
+      @@priority.select{ |k| @keys.include? k }.each do |key|
+        @@keys.each do |sample|
+          if /#{sample[0]}/ === http_user_agent
+            return key if sample[(1...sample.size)].include? key
           end
         end
       end

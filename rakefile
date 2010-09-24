@@ -4,7 +4,7 @@ require 'spec/rake/spectask'
 require 'rake/rdoctask'
 
 desc 'Default: run rspec tests.'
-task :default => :test
+task :default => :spec
 
 desc 'Run all tests'
 Spec::Rake::SpecTask.new(:spec) do |t|
@@ -21,7 +21,6 @@ begin
     gemspec.email = "daniel@degu.cl"
     gemspec.homepage = "http://github.com/danielhz/uagent"
     gemspec.summary = "Helps you to develop web applications for diferent user agents"
-    gemspec.add_dependency('rack', '>= 0.9.1')
   end
 rescue LoadError
 end
