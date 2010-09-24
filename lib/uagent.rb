@@ -4,52 +4,39 @@ module UAgent
 
   class Parser
 
-    @@keys = [['Mobile', :mobile],
-              ['Opera Mini', :mobile],
-              ['iPhone', :iphone, :mobile],
-              ['ACER', :mobile],
-              ['Alcatel', :mobile],
-              ['AUDIOVOX', :mobile],
-              ['BlackBerry', :blackberry, :mobile],
-              ['CDM', :mobile],
-              ['Ericsson', :mobile],
-              ['LG', :mobile],
-              ['LGE', :mobile],
-              ['Motorola', :mobile],
-              ['MOT', :mobile],
-              ['NEC', :mobile],
-              ['Nokia', :mobile],
-              ['Panasonic', :mobile],
-              ['QCI', :mobile],
-              ['SAGEM', :mobile],
-              ['SAMSUNG', :mobile],
-              ['SEC', :mobile],
-              ['Sanyo', :mobile],
-              ['Sendo', :mobile],
-              ['SHARP', :mobile],
-              ['SonyEricsson', :mobile],
-              ['Telit', :mobile],
-              ['Telit_mobile_Terminals', :mobile],
-              ['TSM', :mobile],
-              ['Palm', :mobile]]
-    @@priority = [:iphone, :blackberry, :mobile]
+    attr_reader :keys, :specific_keys
 
-    def initialize(*keys)
-      @keys = [:desktop, :mobile] + keys
+    @@default_database = {
+      :mobile => ['Mobile', 'Opera Mini', 'iPhone', 'ACER', 'Alcatel', 'AUDIOVOX',
+                  'BlackBerry', 'CDM', 'Ericsson', 'LG', 'LGE', 'Motorola', 'MOT',
+                  'NEC', 'Nokia', 'Panasonic', 'QCI', 'SAGEM', 'SAMSUNG', 'SEC',
+                  'Sanyo', 'Sendo', 'SHARP', 'SonyEricsson', 'Telit',
+                  'Telit_mobile_Terminals', 'TSM', 'Palm'],
+      :iphone => ['iPhone'],
+      :blackberry => ['BlackBerry']
+    }
+
+    def initialize(*specific_keys)
+      @specific_keys = specific_keys.clone
+      @keys = [:desktop, :mobile] + @specific_keys
+      set_database @@default_database
+    end
+
+    def set_database(database)
+      @database = database.clone
+      @database.each do |k,v|
+        @database[k] = Regexp.new( "(" + v.join("|") + ")" )
+      end
     end
 
     def call(env)
       # Check devices in http user agent
       http_user_agent = env['HTTP_USER_AGENT']
-      @@priority.select{ |k| @keys.include? k }.each do |key|
-        @@keys.each do |sample|
-          if /#{sample[0]}/ === http_user_agent
-            return key if sample[(1...sample.size)].include? key
-          end
-        end
+      (@specific_keys + [:mobile]).each do |k|
+        return k if @database[k] === http_user_agent
       end
-      # As device is not found, return the default
-      return @keys[0]
+      # Device is not found, return the default
+      return :desktop
     end
 
   end

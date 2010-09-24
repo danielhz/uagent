@@ -56,4 +56,13 @@ describe 'UAgent::Parser' do
     parser.call(env).should == :desktop
   end
 
+  it 'allows to change the device database' do
+    parser = UAgent::Parser.new(:test)
+    parser.set_database({:test => ['Test']})
+
+    ua = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.10) Test"
+    env = { 'HTTP_USER_AGENT' => ua }
+    parser.call(env).should == :test
+  end
+
 end

@@ -21,6 +21,8 @@ begin
     gemspec.email = "daniel@degu.cl"
     gemspec.homepage = "http://github.com/danielhz/uagent"
     gemspec.summary = "Helps you to develop web applications for diferent user agents"
+    gemspec.rubyforge_project = "uagent"
+    gemspec.description = "Helps you to develop for diferent http user agents."
   end
 rescue LoadError
 end
