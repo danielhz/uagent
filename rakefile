@@ -24,3 +24,26 @@ begin
   end
 rescue LoadError
 end
+
+begin
+  require 'darkfish-rdoc'
+  DARKFISH_ENABLED = true
+rescue LoadError => ex
+  DARKFISH_ENABLED = false
+end
+
+BASE_RDOC_OPTIONS = [
+  '--line-numbers', '--inline-source',
+  '--main' , 'README.rdoc',
+  '--title', 'uagent'
+]
+
+rd = Rake::RDocTask.new do |rdoc|
+  rdoc.rdoc_dir = 'html'
+  rdoc.title = "uagent"
+  rdoc.options = BASE_RDOC_OPTIONS.dup
+  rdoc.options << '-SHN' << '-f' << 'darkfish' if DARKFISH_ENABLED
+  rdoc.options << '--charset' << 'utf-8'
+  rdoc.rdoc_files.include('README.rdoc')
+  rdoc.rdoc_files.include('lib/**/*.rb', 'doc/**/*.rdoc')
+end
