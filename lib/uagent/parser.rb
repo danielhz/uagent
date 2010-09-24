@@ -36,11 +36,6 @@ module UAgent
     end
 
     def call(env)
-      # Check devices in the path info
-      path_info = env['PATH_INFO']
-      @@device_names.each do |device|
-        return device if /^\/#{device}\// === path_info
-      end
       # Check devices in http user agent
       http_user_agent = env['HTTP_USER_AGENT']
       @@keys.each do |key|
