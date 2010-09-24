@@ -2,6 +2,10 @@
 
 Helps you to develop web applications for desktop or mobile user agents.
 
+== Install
+
+    gem install uagent
+
 == Use
 
 == Other Stuff
