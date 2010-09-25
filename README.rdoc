@@ -6,42 +6,79 @@ Helps you to develop web applications for desktop or mobile user agents.
 
     $ gem install uagent
 
-== Use
+== Usage
+
+When a browser sends a request to your web application the request has
+an HTTP_USER_AGENT attribute that identifies the device an
+browser. For example, the next string identifies an particular model
+of iPhone, that uses an specific mobile version for Safari.
+
+    Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_1_2 like Mac OS X; en-us) 
+    AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7D11
+    Safari/528.16
+
+Each mobile phone model will send you a particular user agent string,
+thus is a good idea classify the devices in groups an develop a
+specific interface for each group. For each group we define a key, so
+the user agent parser receive the user agent string and returns that
+key. For example, the answer for the string above could be :mobile or
+:iphone, depending on the parser configuration.
+
+If you are developing web applications on top of rack, I recommend
+you to look the uagent_rack[http://github.com/danielhz/uagent_rack]
+gem.
+
+=== Code example
 
     require 'rubygmes'
     require 'uagent'
 
     # A parser distinguishes between disjoin user agent sets
-
-    parser = UAgent::Parser.new([:desktop, :mobile])
-
-    ua = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_1_2 like Mac OS X; en-us) " +
-         "AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7D11 Safari/528.16"
-
-    parser.call({ 'HTTP_USER_AGENT' => 'ua })    # gets :mobile
-
-    ua = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.10) " +
-         "Gecko/20100915 Ubuntu/10.04 (lucid) Firefox/3.6.10"
-
+    
+    parser = UAgent::Parser.new
+    
+    env = {
+      ...
+      "HTTP_USER_AGENT" => "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_1_2 like Mac OS X; en-us) " +
+          "AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7D11 Safari/528.16",
+      ...
+    }
+    
+    parser.call(env)    # gets :mobile
+    
+    env = {
+      ...
+      "HTTP_USER_AGENT" => "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.10) " +
+          "Gecko/20100915 Ubuntu/10.04 (lucid) Firefox/3.6.10"
+      ...
+    }
+    
     parser.call({ 'HTTP_USER_AGENT' => 'ua })    # gets :desktop
 
-Also you can add more keywords to get a more specific device
-classification.
+=== Using specific user agent groups.
 
-    parser = UAgent::Parser.new([:desktop, :mobile, :iphone])
+The basic user agent groups are :desktop and :mobile. You can add more
+groups adding keys in the constructor function.
+
+    parser = UAgent::Parser.new(:iphone)
 
     ua = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_1_2 like Mac OS X; en-us) " +
          "AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7D11 Safari/528.16"
 
     parser.call({ 'HTTP_USER_AGENT' => 'ua })    # gets :iphone
 
-    ua = "Mozilla/5.0 (BlackBerry; U; BlackBerry 9800; en-US) " +
-         "AppleWebKit/530.17 (KHTML, like Gecko) Version/6.0.0.62 Mobile Safari/530.17"
+The keys order in the constructor is relevant. Put the most specific
+keys first to indicate the parser to start for them.
 
-    parser.call({ 'HTTP_USER_AGENT' => 'ua })    # gets :mobile
+=== Using a custom device database.
 
-Now we are working with the keywords :desktop, :mobile, :iphone and
-:blackberry. Look the tests for more information.
+The parser uses a hash that associates terms to the user agent group
+keyword. That terms are searched in the HTTP_USER_AGENT string to
+analyze if a user agent is into a group. Now we support only the
+keywords :iphone and :blackberry, thus change the database if you need
+a more accurate parser.
+
+     parser.set_database my_custom_database
 
 == Install from code
 
