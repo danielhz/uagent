@@ -84,7 +84,7 @@ a more accurate parser.
 
 First download the code from the repository:
 
-    $ git clone git@github.com:danielhz/uagent.git
+    $ git clone git://github.com/danielhz/uagent.git
 
 This project uses jeweler to build the gem, so you can use this commands:
 
