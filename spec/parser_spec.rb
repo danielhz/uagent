@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'rspec'
 require 'uagent'
 
 describe 'UAgent::Parser' do
