@@ -11,9 +11,10 @@ module UAgent
                   'BlackBerry', 'CDM', 'Ericsson', 'LG', 'LGE', 'Motorola', 'MOT',
                   'NEC', 'Nokia', 'Panasonic', 'QCI', 'SAGEM', 'SAMSUNG', 'SEC',
                   'Sanyo', 'Sendo', 'SHARP', 'SonyEricsson', 'Telit',
-                  'Telit_mobile_Terminals', 'TSM', 'Palm'],
+                  'Telit_mobile_Terminals', 'TSM', 'Palm', 'ViewPad'],
       :iphone => ['iPhone'],
-      :blackberry => ['BlackBerry']
+      :blackberry => ['BlackBerry'],
+      :android => ['ViewPad7']
     }
 
     def initialize(*specific_keys)
